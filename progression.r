@@ -1,3 +1,5 @@
+#!/bin/Rscript
+
 library(DAAG)
 library(ggplot2)
 data(progression)
@@ -13,13 +15,13 @@ xyplot(log(Time) ~ log(Distance), data=progression, type=c("p","r"))
 # display the log log plot of time vs distance with a LOESS fit
 # regression using only points
 xyplot(log(Time) ~ log(Distance), data=progression,
-       type=c("p","smooth"))
+    type=c("p","smooth"))
 
 # display the residuals from the linear model for each value on
 # a log plot of the distance
 res <- resid(lm(log(Time) ~ log(Distance), data=progression))
 plot(res ~ log(Distance), data=progression,
-     ylab="Residuals from regression line on log scales")
+    ylab="Residuals from regression line on log scales")
 
 
 # display the progression of record times for each individual event vs year
@@ -43,7 +45,9 @@ for (d in distlist){
 
     # create the base plt
     p <- ggplot(data=newdata, aes(x=year, y=Time, group=1)) +
-         geom_point() + ggtitle(paste(toString(d)," km"))
+         geom_point() +
+         stat_smooth(method="lm",formula=y~log(x),fill="red") +
+         ggtitle(paste(toString(d)," km"))
 
     # if there are anomalies, add them to the plot
     if (!is.na(anomalies[1,1])){
